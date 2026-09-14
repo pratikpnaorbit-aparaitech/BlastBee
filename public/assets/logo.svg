@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="beeGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <filter id="subtleShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Bee Icon Symbol -->
+  <g transform="translate(10, 10)" filter="url(#subtleShadow)">
+    <rect x="0" y="0" width="80" height="80" rx="20" fill="url(#beeGold)" />
+    <g transform="translate(16, 16) scale(2)">
+      <path d="M10 5C8.5 2.5 5 2.5 3.5 4.5C2 6.5 3 10 5.5 11C7.5 11.8 9.5 9.5 10 7.5V5Z" fill="#38bdf8" opacity="0.95"/>
+      <path d="M14 5C15.5 2.5 19 2.5 20.5 4.5C22 6.5 21 10 18.5 11C16.5 11.8 14.5 9.5 14 7.5V5Z" fill="#38bdf8" opacity="0.95"/>
+      <ellipse cx="12" cy="13" rx="4.8" ry="6.5" fill="#0f172a"/>
+      <path d="M7.6 11H16.4" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M7.4 13.5H16.6" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+      <path d="M8.2 16H15.8" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="12" cy="7" r="2.8" fill="#ffffff"/>
+      <path d="M10.8 5L9 2.8" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M13.2 5L15 2.8" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M12 19.5V22" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- BlastBee Typography -->
+  <text x="110" y="62" font-family="'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" font-size="44" font-weight="800" letter-spacing="-1" fill="#ffffff">
+    Blast<tspan fill="#fbbf24">Bee</tspan>
+  </text>
+</svg>

@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "BlastBee - Email Outreach & Multi-SMTP Engine",
+  "version": "2.4.0",
+  "description": "High-impact email outreach and marketing engine for software companies, colleges & recruiters with multi-SMTP auto-rotation.",
+  "author": "Aparaitech Software",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "BlastBee Outreach Cockpit"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "notifications"
+  ],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "http://127.0.0.1:3000/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

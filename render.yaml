@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: aparaitech-student-mail-blast
+    runtime: node
+    plan: free # or starter
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    # Optional persistent disk for keeping SQLite data permanently across redeploys:
+    # disk:
+    #   name: mailblast-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
+    # envVars:
+    #   - key: DB_PATH
+    #     value: /var/data/mailblast.db

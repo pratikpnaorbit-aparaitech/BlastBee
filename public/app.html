@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BlastBee &bull; Developed by Aparaitech Software</title>
+  <meta name="description" content="BlastBee Chrome Extension - High-volume student email blast platform with multi-SMTP rotation, developed by Aparaitech Software." />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/logo.svg" />
+
+  <!-- Google Fonts: Poppins, Plus Jakarta Sans, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/toast.css" />
+
+  <style>
+    .trial-banner-bar {
+      background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 100%);
+      color: #ffffff;
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      right: 0;
+      z-index: 99;
+      height: 38px;
+    }
+    .has-trial-banner .app-layout {
+      margin-top: 38px;
+    }
+    .has-trial-banner .app-sidebar {
+      top: calc(var(--header-height) + 38px);
+    }
+  </style>
+</head>
+<body class="app-body">
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-logo" onclick="app.navigate('dashboard')" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+        <div class="brand-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 9px; box-shadow: 0 3px 10px rgba(245, 158, 11, 0.4); flex-shrink: 0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 5C8.5 2.5 5 2.5 3.5 4.5C2 6.5 3 10 5.5 11C7.5 11.8 9.5 9.5 10 7.5V5Z" fill="#38bdf8" opacity="0.9"/>
+            <path d="M14 5C15.5 2.5 19 2.5 20.5 4.5C22 6.5 21 10 18.5 11C16.5 11.8 14.5 9.5 14 7.5V5Z" fill="#38bdf8" opacity="0.95"/>
+            <ellipse cx="12" cy="13" rx="4.8" ry="6.5" fill="#0f172a"/>
+            <path d="M7.6 11H16.4" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M7.4 13.5H16.6" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8.2 16H15.8" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="7" r="2.8" fill="#ffffff"/>
+            <path d="M10.8 5L9 2.8" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M13.2 5L15 2.8" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M12 19.5V22" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="brand-name" style="font-size: 1.25rem; font-weight: 800; letter-spacing: -0.4px; color: #ffffff; line-height: 1;">
+          Blast<span style="color: #fbbf24;">Bee</span>
+        </span>
+      </div>
+      <div class="header-badge" id="envBadge" title="Live SMTP delivery">
+        <span class="badge-dot"></span>
+        <span id="envBadgeText">Live SMTP</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div id="customerProfileWidget" style="display: flex; align-items: center; gap: 10px;">
+        <span id="customerNamePill" class="badge badge-secondary" style="font-size: 0.78rem;">Customer</span>
+        <button class="btn btn-outline btn-xs" onclick="app.logout()" style="color: #fff; border-color: rgba(255,255,255,0.25);">
+          <span>Sign Out</span>
+        </button>
+      </div>
+
+      <button class="btn btn-outline btn-sm" onclick="app.openLaptopModal()" id="btnHeaderDownloadApp" style="color: #38bdf8; border-color: rgba(56,189,248,0.5); background: rgba(56,189,248,0.12); gap: 6px; font-weight: 700;">
+        <span>💻</span>
+        <span>Download App</span>
+      </button>
+
+      <button class="btn btn-primary btn-sm" onclick="app.navigate('composer')" id="btnHeaderCompose">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <span>New Blast</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 7-Day Free Trial Notice Banner -->
+  <div id="trialBanner" class="trial-banner-bar" style="display: none;">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span>⏳</span>
+      <span id="trialBannerText"><strong>7-Day Free Trial:</strong> <span id="trialDaysCount">7</span> days remaining &bull; <strong id="trialServerCount">1 of 1 SMTP Server</strong> Active</span>
+    </div>
+    <button class="btn btn-sm" onclick="app.openUpgradeModal()" id="btnUpgradeTrial" style="background: #f59e0b; color: #000; font-weight: 700; border: none; padding: 3px 12px; font-size: 0.75rem; border-radius: 4px;">
+      ⚡ Upgrade to Pro (5 Servers)
+    </button>
+  </div>
+
+  <!-- App Layout Container -->
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">CUSTOMER WORKSPACE</div>
+        <a href="#dashboard" class="nav-item active" data-view="dashboard" id="nav-dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#students" class="nav-item" data-view="students" id="nav-students">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span>Candidate Pool</span>
+          <span class="nav-counter" id="navStudentCount">0</span>
+        </a>
+        <a href="#import" class="nav-item" data-view="import" id="nav-import">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <span>Bulk Upload</span>
+        </a>
+        <a href="#composer" class="nav-item" data-view="composer" id="nav-composer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          <span>Email Composer</span>
+        </a>
+        <a href="#blast-monitor" class="nav-item" data-view="blast-monitor" id="nav-blast-monitor">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          <span>Live Blast Cockpit</span>
+          <span class="nav-live-pulse" id="navLiveIndicator" style="display:none;"></span>
+        </a>
+        <a href="#history" class="nav-item" data-view="history" id="nav-history">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span>Campaign History</span>
+        </a>
+
+        <div class="nav-section-title">CONFIGURATION &amp; BILLING</div>
+        <a href="#templates" class="nav-item" data-view="templates" id="nav-templates">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          <span>Email Templates</span>
+        </a>
+        <a href="#settings" class="nav-item" data-view="settings" id="nav-settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>My SMTP Senders</span>
+        </a>
+        <a href="#subscription" class="nav-item" data-view="subscription" id="nav-subscription">
+          <span style="font-size: 1.1rem;">💎</span>
+          <span>Subscription &amp; Plans</span>
+          <span class="badge badge-warning" style="font-size: 0.65rem; margin-left: auto;">Upgrade</span>
+        </a>
+
+        <div class="nav-section-title">DESKTOP APP</div>
+        <a href="javascript:void(0)" onclick="app.openLaptopModal()" class="nav-item" id="nav-laptop-app">
+          <span style="font-size: 1.1rem;">💻</span>
+          <span>Download App</span>
+          <span class="badge badge-success" style="font-size: 0.65rem; margin-left: auto;">Laptop</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Footer Info -->
+      <div class="sidebar-footer">
+        <div class="org-card">
+          <div class="org-title" style="display: flex; align-items: center; justify-content: space-between;">
+            <span>BlastBee 🐝</span>
+          </div>
+          <div class="org-desc" style="color: #94a3b8; font-size: 0.74rem; margin-top: 3px;">Developed by Aparaitech Software</div>
+          <button class="btn btn-outline btn-sm" onclick="app.openLaptopModal()" style="width: 100%; justify-content: center; margin-top: 10px; font-size: 0.76rem; padding: 6px 10px; gap: 6px; border-color: #38bdf8; color: #0284c7; background: #f0f9ff; font-weight: 700;">
+            <span>💻</span>
+            <span>Download for Laptop</span>
+          </button>
+          <a href="https://wa.me/919158852129?text=Hi%20BlastBee%20Team%2C%20I%20need%20help%20with%20my%20BlastBee%20account." target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 4px; color: #22c55e; font-size: 0.72rem; font-weight: 700; text-decoration: none; margin-top: 8px;">
+            <span>💬 WhatsApp: 9158852129</span>
+          </a>
+          <a href="/" class="org-link" style="margin-top: 4px; display: block;">&larr; Back to Home</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main View Dynamic Area -->
+    <main class="app-main" id="viewContainer">
+      <div class="view-loading">
+        <div class="spinner"></div>
+        <p>Loading Your Recruitment Workspace...</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Global Modal Container -->
+  <div id="modalContainer" class="modal-overlay" style="display: none;">
+    <div class="modal-card" id="modalCard"></div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Application Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/views/dashboard.js"></script>
+  <script src="/js/views/students.js"></script>
+  <script src="/js/views/import.js"></script>
+  <script src="/js/views/composer.js"></script>
+  <script src="/js/views/templates.js"></script>
+  <script src="/js/views/blastMonitor.js"></script>
+  <script src="/js/views/history.js"></script>
+  <script src="/js/views/settings.js"></script>
+  <script src="/js/views/subscription.js"></script>
+  <script src="/js/views/demoTour.js"></script>
+  <script src="/js/views/admin.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

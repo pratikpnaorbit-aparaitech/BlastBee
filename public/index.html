@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BlastBee 🐝 Chrome Extension &bull; High-Impact Outreach Engine &bull; Developed by Aparaitech Software</title>
+  <meta name="description" content="BlastBee Chrome Extension developed by Aparaitech Software. High-impact cold email outreach & marketing engine for software companies, colleges, and recruitment teams with multi-SMTP auto-rotation." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/logo.svg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/toast.css" />
+
+  <style>
+    .landing-hero {
+      background: linear-gradient(135deg, #070d1f 0%, #0b193d 50%, #172554 100%);
+      color: #ffffff;
+      padding: 100px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .landing-hero::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(37,99,235,0.2);
+      border: 1px solid rgba(56,189,248,0.4);
+      border-radius: 99px;
+      font-size: 0.8rem;
+      color: #93c5fd;
+      margin-bottom: 24px;
+      backdrop-filter: blur(8px);
+    }
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      letter-spacing: -0.5px;
+    }
+    .hero-gradient-text {
+      background: linear-gradient(90deg, #38bdf8 0%, #60a5fa 50%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: #cbd5e1;
+      max-width: 720px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+    .hero-cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .landing-section {
+      padding: 80px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      font-family: var(--font-heading);
+    }
+    .section-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: #ffffff;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .feature-icon-box {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: #eff6ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 18px;
+    }
+
+    /* ==========================================================================
+       Pricing Grid & Cards Alignment Engine (Symmetrical 4-Card Alignment)
+       ========================================================================== */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+    @media (max-width: 1100px) {
+      .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 640px) {
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pricing-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 30px 20px 22px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-sizing: border-box;
+      height: 100%;
+    }
+    .pricing-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .pricing-card-trial {
+      border: 1.5px solid #38bdf8;
+      box-shadow: 0 4px 18px -4px rgba(56, 189, 248, 0.18);
+    }
+    .pricing-card-starter {
+      border: 1.5px solid #cbd5e1;
+      box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.05);
+    }
+    .pricing-card-growth {
+      border: 2.5px solid #2563eb;
+      box-shadow: 0 12px 32px -4px rgba(37, 99, 235, 0.24);
+    }
+    .pricing-card-enterprise {
+      border: 1.5px solid #c084fc;
+      box-shadow: 0 4px 18px -4px rgba(192, 132, 252, 0.18);
+    }
+
+    /* Centered Symmetrical Header Badges */
+    .pricing-badge {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 99px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      z-index: 2;
+    }
+    .pricing-badge-trial {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .pricing-badge-starter {
+      background: #334155;
+      color: #ffffff;
+    }
+    .pricing-badge-growth {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .pricing-badge-enterprise {
+      background: #7c3aed;
+      color: #ffffff;
+    }
+
+    /* Locked Heights for Horizontal Synchronization */
+    .pricing-title-row {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .pricing-title-row h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+      margin: 0;
+    }
+
+    .pricing-desc-row {
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .pricing-desc-row p {
+      font-size: 0.82rem;
+      color: #64748b;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .pricing-price-row {
+      min-height: 72px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: center;
+    }
+    .pricing-price-amount {
+      font-size: 2.3rem;
+      font-weight: 900;
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+    .pricing-price-sub {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .pricing-quota-box {
+      min-height: 68px;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .pricing-quota-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    .pricing-quota-val {
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .pricing-features-list {
+      flex: 1;
+      min-height: 240px;
+      list-style: none;
+      padding: 0;
+      margin: 0 0 22px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .pricing-feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.81rem;
+      line-height: 1.4;
+      color: #334155;
+    }
+    .pricing-check-icon {
+      color: #16a34a;
+      font-weight: 800;
+      font-size: 0.9rem;
+      line-height: 1.3;
+      flex-shrink: 0;
+    }
+
+    .pricing-action-box {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+    .pricing-cta-btn {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.88rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: transform 0.15s ease, filter 0.15s ease;
+      box-sizing: border-box;
+    }
+    .pricing-cta-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+    .pricing-cta-trial {
+      background: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+    }
+    .pricing-cta-starter {
+      background: #0f172a;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+    }
+    .pricing-cta-growth {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+    }
+    .pricing-cta-enterprise {
+      background: #7c3aed;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+    }
+    .pricing-subtext {
+      font-size: 0.72rem;
+      color: #64748b;
+      font-weight: 600;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="app-body">
+  <!-- Top Navigation Header -->
+  <header class="app-header" style="background: rgba(11, 19, 41, 0.95); backdrop-filter: blur(10px);">
+    <div class="header-left">
+      <div class="brand-logo" onclick="window.scrollTo(0, 0)" style="cursor: pointer; display: flex; align-items: center; gap: 12px;">
+        <div class="brand-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; box-shadow: 0 4px 16px rgba(245, 158, 11, 0.45); flex-shrink: 0;">
+          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 5C8.5 2.5 5 2.5 3.5 4.5C2 6.5 3 10 5.5 11C7.5 11.8 9.5 9.5 10 7.5V5Z" fill="#38bdf8" opacity="0.9"/>
+            <path d="M14 5C15.5 2.5 19 2.5 20.5 4.5C22 6.5 21 10 18.5 11C16.5 11.8 14.5 9.5 14 7.5V5Z" fill="#38bdf8" opacity="0.95"/>
+            <ellipse cx="12" cy="13" rx="4.8" ry="6.5" fill="#0f172a"/>
+            <path d="M7.6 11H16.4" stroke="#fbbf24" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M7.4 13.5H16.6" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8.2 16H15.8" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="7" r="2.8" fill="#ffffff"/>
+            <path d="M10.8 5L9 2.8" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M13.2 5L15 2.8" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M12 19.5V22" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="brand-name" style="font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; color: #ffffff; line-height: 1;">
+          Blast<span style="color: #fbbf24;">Bee</span>
+        </span>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 20px; font-size: 0.86rem; font-weight: 600; color: #cbd5e1;">
+      <a href="#features" style="color: inherit; text-decoration: none;">Features</a>
+      <a href="#pricing" style="color: inherit; text-decoration: none;">Pricing &amp; Free Trial</a>
+      <a href="#how-it-works" style="color: inherit; text-decoration: none;">How It Works</a>
+      <a href="javascript:void(0)" onclick="Landing.openLaptopModal()" style="color: #38bdf8; text-decoration: none; display: flex; align-items: center; gap: 6px; background: rgba(56, 189, 248, 0.12); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.3); font-weight: 700;">
+        <span>💻 Download App</span>
+      </a>
+      <a href="https://wa.me/919158852129?text=Hi%20Aparaitech%20Software,%20I%20want%20to%20learn%20more%20about%20BlastBee%20Chrome%20Extension" target="_blank" style="color: #4ade80; text-decoration: none; display: flex; align-items: center; gap: 6px; background: rgba(34, 197, 94, 0.12); padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(74, 222, 128, 0.3);">
+        <span>💬 WhatsApp: 9158852129</span>
+      </a>
+    </div>
+
+    <div class="header-right">
+      <button class="btn btn-outline btn-sm" onclick="Landing.openLoginModal()" style="color: #fff; border-color: rgba(255,255,255,0.3);">
+        <span>Customer Login</span>
+      </button>
+
+      <button class="btn btn-primary btn-sm" onclick="Landing.openSignupModal()">
+        <span>Start 7-Day Free Trial</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="landing-hero">
+    <div style="max-width: 1040px; margin: 0 auto; position: relative; z-index: 2;">
+      <div class="hero-badge" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fde68a;">
+        <span>🐝</span>
+        <span>BlastBee Chrome Extension &bull; Developed by Aparaitech Software &bull; 7-Day Free Trial</span>
+      </div>
+
+      <h1 class="hero-title">
+        High-Impact Email Outreach &amp; Marketing Engine for <span class="hero-gradient-text">Software Companies, Colleges &amp; Recruiters</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Supercharge your cold B2B outreach, software client marketing, college placement drives, and hiring campaigns. BlastBee Chrome Extension gives you multi-SMTP auto-rotation, 99.8% inbox deliverability shield, smart CSV/Excel contact import, and live SSE progress streaming.
+      </p>
+
+      <div class="hero-cta-group">
+        <button class="btn btn-primary" onclick="Landing.openSignupModal()" style="font-size: 1rem; padding: 12px 28px; font-weight: 700;">
+          <span>🚀 Start 7-Day Free Trial (1 Server)</span>
+        </button>
+        <button class="btn btn-outline" onclick="Landing.openLaptopModal()" style="font-size: 1rem; padding: 12px 24px; color: #38bdf8; border-color: #38bdf8; background: rgba(56,189,248,0.12); font-weight: 700;">
+          <span>💻 Download App (Laptop)</span>
+        </button>
+        <button class="btn btn-outline" onclick="Landing.openLoginModal()" style="font-size: 1rem; padding: 12px 24px; color: #fff; border-color: rgba(255,255,255,0.3);">
+          <span>Sign In to Your Workspace &rarr;</span>
+        </button>
+        <a href="https://wa.me/919158852129?text=Hi%20Aparaitech%20Software,%20I%20would%20like%20to%20get%20help%20or%20book%20an%20appointment%20for%20BlastBee%20Chrome%20Extension" target="_blank" class="btn" style="font-size: 1rem; padding: 12px 22px; font-weight: 700; background: #22c55e; color: #ffffff; text-decoration: none; border-radius: 6px; box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35); display: inline-flex; align-items: center; gap: 8px;">
+          <span>💬 WhatsApp: 9158852129</span>
+        </a>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 24px; font-size: 0.82rem; color: #94a3b8; flex-wrap: wrap;">
+        <div>✓ Used by Software Companies &amp; Colleges</div>
+        <div>✓ 1 Dedicated SMTP Server Free</div>
+        <div>✓ Direct UPI Activation (₹ INR)</div>
+        <div>✓ Instant Setup in 2 Minutes</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BlastBee Product Showcase Preview -->
+  <section style="max-width: 1040px; margin: -20px auto 60px; padding: 0 24px; position: relative; z-index: 10;">
+    <div style="background: #0f172a; border: 1.5px solid rgba(255,255,255,0.15); border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); overflow: hidden;">
+      <!-- Browser / Extension Window Header -->
+      <div style="background: #1e293b; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08);">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="width: 12px; height: 12px; border-radius: 50%; background: #ef4444; display: inline-block;"></span>
+          <span style="width: 12px; height: 12px; border-radius: 50%; background: #f59e0b; display: inline-block;"></span>
+          <span style="width: 12px; height: 12px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+          <span style="margin-left: 12px; font-family: monospace; font-size: 0.78rem; color: #94a3b8;">chrome-extension://blastbee/cockpit.html</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="background: #2563eb; color: #ffffff; font-size: 0.7rem; font-weight: 700; padding: 2px 10px; border-radius: 99px;">v2.4 Chrome Extension</span>
+          <span style="font-size: 0.72rem; color: #93c5fd; font-weight: 600;">Developed by Aparaitech Software</span>
+        </div>
+      </div>
+
+      <!-- Extension Interface Cockpit Preview -->
+      <div style="padding: 24px; background: linear-gradient(180deg, #0f172a 0%, #090d16 100%); color: #ffffff;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;">
+          <!-- Metric 1 -->
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 18px;">
+            <div style="font-size: 0.72rem; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Active SMTP Senders</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: #ffffff; margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+              <span>🖥️ 5 Senders</span>
+              <span style="font-size: 0.7rem; background: #059669; color: #fff; padding: 2px 8px; border-radius: 99px; font-weight: 600;">Round-Robin</span>
+            </div>
+            <div style="font-size: 0.74rem; color: #94a3b8; margin-top: 4px;">Gmail &bull; Outlook &bull; Workspace Pool</div>
+          </div>
+
+          <!-- Metric 2 -->
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 18px;">
+            <div style="font-size: 0.72rem; text-transform: uppercase; color: #a7f3d0; font-weight: 700; letter-spacing: 0.5px;">Inbox Deliverability</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: #34d399; margin-top: 4px;">
+              99.8% <span style="font-size: 0.8rem; font-weight: 500; color: #94a3b8;">Inbox Rate</span>
+            </div>
+            <div style="font-size: 0.74rem; color: #94a3b8; margin-top: 4px;">SPF, DKIM, DMARC &bull; Anti-Spam Shield</div>
+          </div>
+
+          <!-- Metric 3 -->
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 18px;">
+            <div style="font-size: 0.72rem; text-transform: uppercase; color: #fde68a; font-weight: 700; letter-spacing: 0.5px;">Current Campaign</div>
+            <div style="font-size: 1.1rem; font-weight: 800; color: #ffffff; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              Software B2B Outreach &amp; Placements
+            </div>
+            <div style="font-size: 0.74rem; color: #fbbf24; margin-top: 4px;">⚡ Real-time SSE Telemetry Active</div>
+          </div>
+        </div>
+
+        <!-- Live Delivery Progress Bar -->
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px 20px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 8px;">
+            <span><strong style="color: #60a5fa;">Blasting Queue:</strong> 14,890 of 15,000 sent (99.3%)</span>
+            <span style="color: #34d399; font-weight: 700;">● Live Stream: 42 emails/sec</span>
+          </div>
+          <div style="height: 10px; background: #1e293b; border-radius: 99px; overflow: hidden;">
+            <div style="width: 99.3%; height: 100%; background: linear-gradient(90deg, #2563eb 0%, #38bdf8 50%, #10b981 100%); border-radius: 99px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Laptop Desktop Application Download Showcase Banner -->
+  <section style="max-width: 1040px; margin: 0 auto 40px; padding: 0 24px;">
+    <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f2744 100%); border: 1.5px solid rgba(56, 189, 248, 0.35); border-radius: 16px; padding: 32px 36px; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: space-between; gap: 30px; flex-wrap: wrap;">
+      <div style="flex: 1; min-width: 300px;">
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; font-size: 0.76rem; font-weight: 700; padding: 4px 12px; border-radius: 99px; margin-bottom: 12px;">
+          <span>💻 STANDALONE DESKTOP APPLICATION</span>
+          <span>&bull;</span>
+          <span>WINDOWS 10 &amp; 11 (64-BIT)</span>
+        </div>
+        <h3 style="font-size: 1.7rem; font-weight: 800; color: #ffffff; margin-bottom: 10px; font-family: var(--font-heading);">
+          Download BlastBee App for Laptop &amp; PC
+        </h3>
+        <p style="color: #cbd5e1; font-size: 0.92rem; line-height: 1.6; margin-bottom: 20px; max-width: 620px;">
+          Run BlastBee directly on your Windows laptop as a dedicated standalone desktop app. Enjoy ultra-fast local email queue processing, zero cloud delays, instant CSV/Excel contact import, and a 1-click desktop shortcut.
+        </p>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.82rem; color: #94a3b8;">
+          <span style="color: #4ade80;">✓ Native 1-Click App Installer</span>
+          <span style="color: #4ade80;">✓ Dedicated Frameless Desktop Window</span>
+          <span style="color: #4ade80;">✓ Multi-SMTP Local Rotation</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; min-width: 240px;">
+        <a href="/api/download/app" class="btn btn-primary" style="background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: #ffffff; font-size: 1.05rem; font-weight: 800; padding: 15px 30px; border-radius: 10px; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45); transition: transform 0.2s ease;">
+          <span>💻</span>
+          <span>Download App for Laptop</span>
+        </a>
+        <div style="font-size: 0.76rem; color: #94a3b8; text-align: center;">
+          Windows 10 / 11 64-bit &bull; 13.3 MB &bull; v2.4.0
+        </div>
+        <button onclick="Landing.openLaptopModal()" style="background: none; border: none; color: #38bdf8; font-size: 0.8rem; text-decoration: underline; cursor: pointer; padding: 0;">
+          View App Features &amp; Setup Guide &rarr;
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Grid Section -->
+  <section class="landing-section" id="features">
+    <div class="section-header">
+      <div class="badge badge-primary" style="margin-bottom: 12px; font-weight: 800; letter-spacing: 0.5px;">ENTERPRISE ARCHITECTURE</div>
+      <h2 class="section-title">Engineered for Maximum Deliverability &amp; Speed</h2>
+      <p class="section-desc">Everything software companies, colleges, and recruiters need to run high-volume client marketing and campus drives without landing in the spam folder.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+      <!-- Feature 1: Multi-SMTP Auto-Rotation -->
+      <div class="feature-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="feature-icon-box" style="background: #eff6ff; color: #2563eb;">🔄</div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">Multi-SMTP Auto-Rotation</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            Connect multiple Gmail, Google Workspace, or SMTP accounts. Automatically distribute and rotate senders in Round-Robin mode or failover when quotas are reached.
+          </p>
+        </div>
+        <!-- Visual Illustration Box -->
+        <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 12px; font-size: 0.76rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-weight: 700; color: #1e293b;">Active Senders Pool (3 Nodes)</span>
+            <span style="color: #16a34a; font-weight: 700; font-size: 0.7rem;">● Auto-Rotating</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; font-family: monospace; color: #475569;">
+            <div style="background: #ffffff; padding: 4px 8px; border-radius: 4px; border: 1px solid #cbd5e1; display: flex; justify-content: space-between;">
+              <span>🟢 smtp1@company.com</span>
+              <span style="color: #2563eb; font-weight: 700;">Sent: 480/500</span>
+            </div>
+            <div style="background: #ffffff; padding: 4px 8px; border-radius: 4px; border: 1px solid #cbd5e1; display: flex; justify-content: space-between;">
+              <span>🟢 outreach@workspace.org</span>
+              <span style="color: #059669; font-weight: 700;">Active Now &rarr;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 2: 99.8% Inbox Deliverability Shield -->
+      <div class="feature-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="feature-icon-box" style="background: #f0fdf4; color: #16a34a;">🛡️</div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">99.8% Inbox Deliverability Shield</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            Built-in DNS MX verification, spam trigger word detection, anti-spam delay throttling, and domain warming to keep your emails in the primary inbox.
+          </p>
+        </div>
+        <!-- Visual Illustration Box -->
+        <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 8px; padding: 12px; font-size: 0.76rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-weight: 800; color: #166534;">Primary Inbox Guarantee</span>
+            <span style="background: #16a34a; color: #fff; padding: 1px 6px; border-radius: 4px; font-weight: 700; font-size: 0.68rem;">99.8% PASS</span>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <span style="background: #ffffff; border: 1px solid #86efac; color: #15803d; padding: 2px 8px; border-radius: 4px; font-weight: 700;">✓ SPF Valid</span>
+            <span style="background: #ffffff; border: 1px solid #86efac; color: #15803d; padding: 2px 8px; border-radius: 4px; font-weight: 700;">✓ DKIM 2048</span>
+            <span style="background: #ffffff; border: 1px solid #86efac; color: #15803d; padding: 2px 8px; border-radius: 4px; font-weight: 700;">✓ DMARC 100%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 3: Intelligent Spreadsheet Importer -->
+      <div class="feature-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="feature-icon-box" style="background: #faf5ff; color: #9333ea;">📊</div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">Intelligent Spreadsheet Importer</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            Drag and drop client or student Excel and CSV files. Auto-detects column names, validates RFC emails, and eliminates duplicate contacts automatically.
+          </p>
+        </div>
+        <!-- Visual Illustration Box -->
+        <div style="background: #faf5ff; border: 1.5px solid #e9d5ff; border-radius: 8px; padding: 12px; font-size: 0.76rem;">
+          <div style="font-weight: 700; color: #6b21a8; margin-bottom: 6px;">Parsed Spreadsheet Matrix:</div>
+          <div style="background: #ffffff; border: 1px solid #d8b4fe; border-radius: 6px; overflow: hidden; font-size: 0.72rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1.2fr 1fr; background: #f3e8ff; padding: 4px 8px; font-weight: 700; color: #581c87;">
+              <span>Name</span><span>Email</span><span>Organization</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1.2fr 1fr; padding: 4px 8px; border-top: 1px solid #f3e8ff; color: #374151;">
+              <span>Kunal Shah</span><span style="color: #059669;">kunal@corp.io</span><span>TechCorp</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 4: Personalization Variable Studio -->
+      <div class="feature-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="feature-icon-box" style="background: #fff1f2; color: #e11d48;">✉️</div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">Personalization Variable Studio</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            Inject dynamic variables like <code>{Name}</code>, <code>{College}</code>, <code>{Branch}</code>, and dynamic <code>{ApplyLink}</code> hyperlinks directly into subjects and HTML bodies.
+          </p>
+        </div>
+        <!-- Visual Illustration Box -->
+        <div style="background: #fff1f2; border: 1.5px solid #fecdd3; border-radius: 8px; padding: 12px; font-size: 0.76rem;">
+          <div style="font-weight: 700; color: #9f1239; margin-bottom: 6px;">Dynamic Live Token Preview:</div>
+          <div style="background: #ffffff; border: 1px solid #fda4af; border-radius: 6px; padding: 6px 10px; color: #374151; font-size: 0.74rem;">
+            Subject: Exclusive Drive for <span style="background: #fee2e2; color: #be123c; font-weight: 700; padding: 1px 4px; border-radius: 3px;">{Name}</span> at <span style="background: #fee2e2; color: #be123c; font-weight: 700; padding: 1px 4px; border-radius: 3px;">{College}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 5: Real-Time Live SSE Cockpit -->
+      <div class="feature-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="feature-icon-box" style="background: #fefce8; color: #ca8a04;">⚡</div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">Real-Time Live SSE Cockpit</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            Monitor live campaigns with animated telemetry, velocity speed meters (emails/second), pause/resume throttles, and real-time execution logs.
+          </p>
+        </div>
+        <!-- Visual Illustration Box -->
+        <div style="background: #fefce8; border: 1.5px solid #fef08a; border-radius: 8px; padding: 12px; font-size: 0.76rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-weight: 700; color: #854d0e;">Stream Telemetry</span>
+            <span style="color: #ca8a04; font-weight: 700;">⚡ 45 emails/sec</span>
+          </div>
+          <div style="background: #ffffff; border: 1px solid #fde047; border-radius: 4px; height: 8px; overflow: hidden;">
+            <div style="background: #eab308; width: 85%; height: 100%;"></div>
+          </div>
+          <div style="font-size: 0.7rem; color: #a16207; margin-top: 4px;">4,250 of 5,000 sent &bull; Zero drops</div>
+        </div>
+      </div>
+
+      <!-- Feature 6: 1-Click Retry Audit Reports -->
+      <div class="feature-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div class="feature-icon-box" style="background: #f0fdfa; color: #0d9488;">🔁</div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 8px;">1-Click Retry Audit Reports</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            Audit delivery outcomes, recipient-level timestamps, and bounce diagnostics. Re-queue only failed contacts with a single click without duplicating sends.
+          </p>
+        </div>
+        <!-- Visual Illustration Box -->
+        <div style="background: #f0fdfa; border: 1.5px solid #99f6e4; border-radius: 8px; padding: 12px; font-size: 0.76rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="color: #115e59; font-weight: 700;">Outreach Audit Logs</span>
+            <span style="background: #0d9488; color: #fff; padding: 1px 6px; border-radius: 4px; font-size: 0.68rem; font-weight: 700;">1-CLICK RETRY</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; background: #fff; padding: 4px 8px; border-radius: 4px; border: 1px solid #5eead4; color: #0f766e;">
+            <span>Sent: 99.8%</span>
+            <span style="color: #0d9488; font-weight: 700;">✓ 100% Audit Verified</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section with 7-Day Free Trial & Multi-Server Upgrades -->
+  <section class="landing-section" id="pricing" style="background: #f1f5f9; border-radius: var(--radius-xl); margin-top: 20px; margin-bottom: 40px; padding: 60px 24px;">
+    <div class="section-header">
+      <div class="badge badge-primary" style="margin-bottom: 12px; font-weight: 800; letter-spacing: 0.5px;">SIMPLE, TRANSPARENT INDIAN RUPEE (₹) PRICING</div>
+      <h2 class="section-title">Start with a 7-Day Free Trial &bull; Upgrade as You Scale</h2>
+      <p class="section-desc">Experience rapid delivery with 1 dedicated SMTP sender during your free trial. Unlock high-volume multi-server auto-rotation tiers in Indian Rupees (₹ INR) for software companies, colleges &amp; recruiters with instant UPI activation.</p>
+    </div>
+
+    <div id="pricingGrid" class="pricing-grid">
+      <!-- Dynamic pricing cards will be injected by Landing.loadPlans() -->
+      <!-- Pre-rendered fallback cards matching admin plans in Indian Rupees (₹ INR) -->
+      
+      <!-- 1. 7-Day Free Trial Card -->
+      <div class="pricing-card pricing-card-trial">
+        <div class="pricing-badge pricing-badge-trial">🎁 7-DAY FREE TRIAL</div>
+        
+        <div class="pricing-title-row">
+          <h3>7-Day Free Trial</h3>
+        </div>
+        
+        <div class="pricing-desc-row">
+          <p>Try all recruitment email blast features free for 7 days with 1 dedicated SMTP server.</p>
+        </div>
+        
+        <div class="pricing-price-row">
+          <div class="pricing-price-amount" style="color: #0f172a;">₹0</div>
+          <div class="pricing-price-sub">/ 7 days free trial</div>
+        </div>
+
+        <div class="pricing-quota-box" style="background: #f0f9ff; border: 1px solid #bae6fd;">
+          <div class="pricing-quota-label" style="color: #0284c7;">TRIAL SERVER CAPACITY</div>
+          <div class="pricing-quota-val" style="color: #0369a1;">🖥️ 1 Dedicated SMTP Server Allowed</div>
+        </div>
+
+        <ul class="pricing-features-list">
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span><strong>1 Dedicated SMTP Server</strong> Allowed</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span><strong>7 Days Full Platform Access</strong></span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Up to 500 Emails / Day (3,500 Total)</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Excel &amp; CSV Spreadsheet Importer</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Dynamic Tag Studio ({Name}, {College})</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Live SSE Blast Cockpit &amp; Diagnostics</span>
+          </li>
+        </ul>
+
+        <div class="pricing-action-box">
+          <button class="pricing-cta-btn pricing-cta-trial" onclick="Landing.openSignupModal('trial')">
+            <span>Start 7-Day Free Trial &rarr;</span>
+          </button>
+          <div class="pricing-subtext">✓ Free 7 Days &bull; No Credit Card Needed</div>
+        </div>
+      </div>
+
+      <!-- 2. Starter Recruiter Tier -->
+      <div class="pricing-card pricing-card-starter">
+        <div class="pricing-badge pricing-badge-starter">💼 RECRUITER STARTER</div>
+        
+        <div class="pricing-title-row">
+          <h3>Starter Recruiter Tier</h3>
+        </div>
+        
+        <div class="pricing-desc-row">
+          <p>Essential toolkit for individual recruiters running small campus placement drives.</p>
+        </div>
+        
+        <div class="pricing-price-row">
+          <div class="pricing-price-amount" style="color: #0f172a;">₹1,499</div>
+          <div class="pricing-price-sub">/ month (billed monthly)</div>
+        </div>
+
+        <div class="pricing-quota-box" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+          <div class="pricing-quota-label" style="color: #475569;">SERVER CAPACITY</div>
+          <div class="pricing-quota-val" style="color: #1e293b;">🖥️ 2 Dedicated SMTP Servers Granted</div>
+        </div>
+
+        <ul class="pricing-features-list">
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span><strong>2 Dedicated Active SMTP Servers</strong></span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Up to <strong>15,000 Emails / Month</strong></span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Up to <strong>5,000 Candidate Contacts</strong></span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Basic Personalization ({Name}, {College})</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Excel &amp; CSV Spreadsheet Importer</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Standard Blast Throttling (350ms delay)</span>
+          </li>
+        </ul>
+
+        <div class="pricing-action-box">
+          <button class="pricing-cta-btn pricing-cta-starter" onclick="Landing.openSignupModal('starter')">
+            <span>Buy Starter Plan (₹1,499) &rarr;</span>
+          </button>
+          <div class="pricing-subtext">⚡ Instant UPI Activation &bull; Cancel Anytime</div>
+        </div>
+      </div>
+
+      <!-- 3. Pro Growth Plan Card -->
+      <div class="pricing-card pricing-card-growth">
+        <div class="pricing-badge pricing-badge-growth">🔥 MOST POPULAR &bull; BEST VALUE</div>
+        
+        <div class="pricing-title-row">
+          <h3>Pro Growth Placement Tier</h3>
+        </div>
+        
+        <div class="pricing-desc-row">
+          <p>Ideal for fast-growing recruitment teams running mid-to-large college drives.</p>
+        </div>
+        
+        <div class="pricing-price-row">
+          <div class="pricing-price-amount" style="color: #2563eb;">₹3,499</div>
+          <div class="pricing-price-sub">/ month (billed monthly)</div>
+        </div>
+
+        <div class="pricing-quota-box" style="background: #eff6ff; border: 1px solid #bfdbfe;">
+          <div class="pricing-quota-label" style="color: #1d4ed8;">MULTI-SERVER CAPACITY</div>
+          <div class="pricing-quota-val" style="color: #1e3a8a;">⚡ 5 Active Multi-SMTP Servers Granted</div>
+        </div>
+
+        <ul class="pricing-features-list">
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span><strong>5 Active Multi-SMTP Servers</strong> Granted</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span><strong>Round-Robin Auto-Rotation</strong> Delivery</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Up to <strong>50,000 Emails / Month</strong></span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Up to <strong>25,000 Candidate Contacts</strong></span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Dynamic <strong>{ApplyLink}</strong> Token Injection</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Anti-Spam Shield &amp; DNS MX Diagnostics</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Live SSE Speed Telemetry &amp; 1-Click Retry</span>
+          </li>
+        </ul>
+
+        <div class="pricing-action-box">
+          <button class="pricing-cta-btn pricing-cta-growth" onclick="Landing.openSignupModal('growth')">
+            <span>Buy Pro Growth (₹3,499) &rarr;</span>
+          </button>
+          <div class="pricing-subtext">🔥 5 Dedicated Servers &bull; Most Popular Choice</div>
+        </div>
+      </div>
+
+      <!-- 4. Enterprise Scale Plan Card -->
+      <div class="pricing-card pricing-card-enterprise">
+        <div class="pricing-badge pricing-badge-enterprise">👑 ENTERPRISE FLEET</div>
+        
+        <div class="pricing-title-row">
+          <h3>Enterprise Scale License</h3>
+        </div>
+        
+        <div class="pricing-desc-row">
+          <p>Complete recruitment enterprise suite with full multi-server fleet &amp; unlimited power.</p>
+        </div>
+        
+        <div class="pricing-price-row">
+          <div class="pricing-price-amount" style="color: #0f172a;">₹8,999</div>
+          <div class="pricing-price-sub">/ month (billed monthly)</div>
+        </div>
+
+        <div class="pricing-quota-box" style="background: #faf5ff; border: 1px solid #e9d5ff;">
+          <div class="pricing-quota-label" style="color: #7c3aed;">ENTERPRISE FLEET</div>
+          <div class="pricing-quota-val" style="color: #4c1d95;">🏢 10+ Multi-SMTP Servers Granted</div>
+        </div>
+
+        <ul class="pricing-features-list">
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span><strong>10+ Dedicated Multi-SMTP Servers</strong></span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Up to <strong>200,000 Emails / Month</strong></span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span><strong>Unlimited Candidate Pool</strong> &amp; Batches</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>All Senders Unlocked + Auto-Failover</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>MongoDB Atlas Cloud Database Sync</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Full Multi-Admin User Management</span>
+          </li>
+          <li class="pricing-feature-item">
+            <span class="pricing-check-icon">✓</span>
+            <span>Priority 24/7 Placement Engine Support</span>
+          </li>
+        </ul>
+
+        <div class="pricing-action-box">
+          <button class="pricing-cta-btn pricing-cta-enterprise" onclick="Landing.openSignupModal('enterprise')">
+            <span>Buy Enterprise License (₹8,999) &rarr;</span>
+          </button>
+          <div class="pricing-subtext">👑 Full Multi-Server Fleet &bull; Priority Support</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trust & Direct UPI Buyer Information Bar -->
+    <div style="margin-top: 36px; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 22px 28px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,0.03);">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 44px; height: 44px; border-radius: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0;">💳</div>
+        <div>
+          <div style="font-size: 0.88rem; font-weight: 800; color: #0f172a; margin-bottom: 2px;">Direct Indian UPI Gateway</div>
+          <div style="font-size: 0.77rem; color: #64748b; line-height: 1.4;">Pay securely via GPay, PhonePe, Paytm or BHIM to Official ID: <strong style="color: #047857;">8261840199-3@ibl</strong></div>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 44px; height: 44px; border-radius: 10px; background: #eff6ff; border: 1px solid #bfdbfe; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0;">⚡</div>
+        <div>
+          <div style="font-size: 0.88rem; font-weight: 800; color: #0f172a; margin-bottom: 2px;">Dedicated Server Provisioning</div>
+          <div style="font-size: 0.77rem; color: #64748b; line-height: 1.4;">Dedicated SMTP sender quotas unlocked immediately upon Admin payment verification.</div>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 44px; height: 44px; border-radius: 10px; background: #f0fdf4; border: 1px solid #86efac; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0;">💬</div>
+        <div>
+          <div style="font-size: 0.88rem; font-weight: 800; color: #0f172a; margin-bottom: 2px;">WhatsApp Help &amp; Appointments</div>
+          <div style="font-size: 0.77rem; color: #64748b; line-height: 1.4;">Need assistance or want to book an onboarding appointment? WhatsApp: <a href="https://wa.me/919158852129?text=Hi%20Aparaitech%20Software,%20I%20want%20to%20book%20an%20appointment%20or%20get%20help%20with%20BlastBee" target="_blank" style="color: #16a34a; font-weight: 700;">+91 9158852129</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Professional Enterprise Footer -->
+  <footer style="background: #070d1f; color: #94a3b8; padding: 64px 24px 32px; border-top: 1px solid rgba(255,255,255,0.08);">
+    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 36px; margin-bottom: 48px;">
+      <!-- Column 1: Brand & Overview -->
+      <div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; font-size: 1.3rem;">
+            🐝
+          </div>
+          <div>
+            <div style="color: #ffffff; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.3px;">Blast<span style="color: #f59e0b;">Bee</span></div>
+            <div style="font-size: 0.68rem; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Chrome Extension</div>
+          </div>
+        </div>
+        <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.6; margin-bottom: 16px;">
+          High-impact cold email outreach &amp; marketing engine developed by <strong>Aparaitech Software</strong>. Built for software companies, colleges &amp; recruitment teams.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.78rem; color: #cbd5e1;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="color: #22c55e;">✓</span> 99.8% Inbox Deliverability Shield
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="color: #22c55e;">✓</span> Multi-SMTP Auto-Rotation Fleet
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="color: #22c55e;">✓</span> Verified Indian UPI (Zero Gateway Fees)
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 2: Product & Features -->
+      <div>
+        <div style="color: #ffffff; font-weight: 700; font-size: 0.9rem; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px;">Product Features</div>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; font-size: 0.82rem;">
+          <li><a href="#features" style="color: #94a3b8; text-decoration: none;">Multi-SMTP Auto-Rotation</a></li>
+          <li><a href="#features" style="color: #94a3b8; text-decoration: none;">Spreadsheet CSV/Excel Importer</a></li>
+          <li><a href="#features" style="color: #94a3b8; text-decoration: none;">Dynamic Tag Personalization Studio</a></li>
+          <li><a href="#features" style="color: #94a3b8; text-decoration: none;">Live Real-Time SSE Telemetry</a></li>
+          <li><a href="#features" style="color: #94a3b8; text-decoration: none;">1-Click Bounce Retry Diagnostics</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Solutions -->
+      <div>
+        <div style="color: #ffffff; font-weight: 700; font-size: 0.9rem; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px;">Target Solutions</div>
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; font-size: 0.82rem;">
+          <li><a href="#pricing" style="color: #94a3b8; text-decoration: none;">Software Companies (B2B Leads)</a></li>
+          <li><a href="#pricing" style="color: #94a3b8; text-decoration: none;">Colleges &amp; Placement Drives</a></li>
+          <li><a href="#pricing" style="color: #94a3b8; text-decoration: none;">Recruiters &amp; Staffing Firms</a></li>
+          <li><a href="#pricing" style="color: #94a3b8; text-decoration: none;">7-Day Free Trial (₹0 Free)</a></li>
+          <li><a href="#pricing" style="color: #94a3b8; text-decoration: none;">Pricing Plans (₹ INR)</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Help & Contact -->
+      <div>
+        <div style="color: #ffffff; font-weight: 700; font-size: 0.9rem; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px;">Support &amp; Booking</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.82rem;">
+          <a href="https://wa.me/919158852129?text=Hi%20Aparaitech%20Software,%20I%20want%20to%20book%20an%20appointment%20or%20get%20help%20with%20BlastBee" target="_blank" 
+            style="display: inline-flex; align-items: center; gap: 8px; background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); padding: 8px 14px; border-radius: 8px; text-decoration: none; font-weight: 700; width: fit-content;">
+            <span>💬 WhatsApp: +91 9158852129</span>
+          </a>
+          <div>
+            <div style="font-size: 0.72rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-bottom: 2px;">Official Support Email</div>
+            <a href="mailto:support@aparaitech.org" style="color: #93c5fd; text-decoration: none;">support@aparaitech.org</a>
+          </div>
+          <div>
+            <div style="font-size: 0.72rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; margin-bottom: 2px;">Developer &amp; Organization</div>
+            <span style="color: #ffffff; font-weight: 600;">Aparaitech Software</span> &bull; <a href="https://aparaitech.org" target="_blank" rel="noopener" style="color: #93c5fd; text-decoration: none;">aparaitech.org &nearr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright Bar -->
+    <div style="max-width: 1200px; margin: 0 auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; font-size: 0.75rem; color: #64748b;">
+      <div>
+        &copy; 2026 BlastBee by <strong>Aparaitech Software</strong>. All rights reserved. High-impact cold email outreach &amp; marketing engine.
+      </div>
+      <div style="display: flex; gap: 18px; color: #94a3b8;">
+        <span>🔒 256-Bit SSL Encrypted</span>
+        <span>🇮🇳 100% Indian UPI Compliant</span>
+        <span>⚡ 99.8% Inbox Guaranteed</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Contact & Appointment Button -->
+  <a href="https://wa.me/919158852129?text=Hi%20Aparaitech%20Software,%20I%20want%20to%20get%20help%20or%20book%20an%20appointment%20regarding%20BlastBee%20Chrome%20Extension" 
+     target="_blank" 
+     rel="noopener" 
+     id="whatsappFloatingBtn"
+     title="Chat on WhatsApp / Book Appointment"
+     style="position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); color: #ffffff; text-decoration: none; padding: 11px 18px; border-radius: 50px; font-weight: 700; font-size: 0.88rem; box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45); cursor: pointer; transition: transform 0.2s ease;">
+    <span style="font-size: 1.3rem; line-height: 1;">💬</span>
+    <span>WhatsApp Help &bull; 9158852129</span>
+  </a>
+
+  <!-- Global Modal Container -->
+  <div id="modalContainer" class="modal-overlay" style="display: none;">
+    <div class="modal-card" id="modalCard"></div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script>
+    const Landing = {
+      state: {
+        plans: []
+      },
+
+      async init() {
+        // Dynamically load admin-customized pricing plans from backend
+        await this.loadPlans();
+
+        // Check hash for login or plan selection
+        if (window.location.hash === '#login') {
+          this.openLoginModal();
+        } else if (window.location.hash === '#signup' || window.location.hash === '#trial') {
+          this.openSignupModal('trial');
+        } else if (window.location.hash.startsWith('#plan-')) {
+          const planId = window.location.hash.replace('#plan-', '');
+          this.openSignupModal(planId);
+        }
+
+        const modalOverlay = document.getElementById('modalContainer');
+        if (modalOverlay) {
+          modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) Landing.closeModal();
+          });
+        }
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') Landing.closeModal();
+        });
+      },
+
+      async loadPlans() {
+        try {
+          const res = await api.getSubscriptionPlans();
+          if (res && res.plans && res.plans.length > 0) {
+            this.state.plans = res.plans;
+            this.renderPricing(res.plans);
+          }
+        } catch (err) {
+          console.warn('Could not load dynamic subscription plans, using fallback:', err);
+        }
+      },
+
+      renderPricing(plans) {
+        const grid = document.getElementById('pricingGrid');
+        if (!grid) return;
+
+        grid.innerHTML = plans.map(p => {
+          const isTrial = p.id === 'trial' || p.price === 0;
+          const isGrowth = p.id === 'growth' || p.is_popular === 1;
+          const isEnterprise = p.id === 'enterprise';
+          const isStarter = p.id === 'starter';
+
+          let cardClass = 'pricing-card-starter';
+          let badgeClass = 'pricing-badge-starter';
+          let badgeText = '💼 RECRUITER STARTER';
+          let quotaBg = '#f8fafc';
+          let quotaBorder = '#e2e8f0';
+          let quotaLabelColor = '#475569';
+          let quotaValColor = '#1e293b';
+          let quotaLabel = 'SERVER CAPACITY';
+          let quotaVal = `🖥️ ${p.max_servers} Dedicated SMTP Servers Granted`;
+          let ctaClass = 'pricing-cta-starter';
+          let ctaText = `Buy Starter Plan (₹${Number(p.price).toLocaleString('en-IN')}) &rarr;`;
+          let subtext = '⚡ Instant UPI Activation &bull; Cancel Anytime';
+
+          if (isTrial) {
+            cardClass = 'pricing-card-trial';
+            badgeClass = 'pricing-badge-trial';
+            badgeText = '🎁 7-DAY FREE TRIAL';
+            quotaBg = '#f0f9ff';
+            quotaBorder = '#bae6fd';
+            quotaLabelColor = '#0284c7';
+            quotaValColor = '#0369a1';
+            quotaLabel = 'TRIAL SERVER CAPACITY';
+            quotaVal = '🖥️ 1 Dedicated SMTP Server Allowed';
+            ctaClass = 'pricing-cta-trial';
+            ctaText = 'Start 7-Day Free Trial &rarr;';
+            subtext = '✓ Free 7 Days &bull; No Credit Card Needed';
+          } else if (isGrowth) {
+            cardClass = 'pricing-card-growth';
+            badgeClass = 'pricing-badge-growth';
+            badgeText = '🔥 MOST POPULAR &bull; BEST VALUE';
+            quotaBg = '#eff6ff';
+            quotaBorder = '#bfdbfe';
+            quotaLabelColor = '#1d4ed8';
+            quotaValColor = '#1e3a8a';
+            quotaLabel = 'MULTI-SERVER CAPACITY';
+            quotaVal = `⚡ ${p.max_servers} Active Multi-SMTP Servers Granted`;
+            ctaClass = 'pricing-cta-growth';
+            ctaText = `Buy Pro Growth (₹${Number(p.price).toLocaleString('en-IN')}) &rarr;`;
+            subtext = '🔥 5 Dedicated Servers &bull; Most Popular Choice';
+          } else if (isEnterprise) {
+            cardClass = 'pricing-card-enterprise';
+            badgeClass = 'pricing-badge-enterprise';
+            badgeText = '👑 ENTERPRISE FLEET';
+            quotaBg = '#faf5ff';
+            quotaBorder = '#e9d5ff';
+            quotaLabelColor = '#7c3aed';
+            quotaValColor = '#4c1d95';
+            quotaLabel = 'ENTERPRISE FLEET';
+            quotaVal = `🏢 ${p.max_servers}+ Multi-SMTP Servers Granted`;
+            ctaClass = 'pricing-cta-enterprise';
+            ctaText = `Buy Enterprise License (₹${Number(p.price).toLocaleString('en-IN')}) &rarr;`;
+            subtext = '👑 Full Multi-Server Fleet &bull; Priority Support';
+          }
+
+          let featuresList = [];
+          try {
+            featuresList = Array.isArray(p.features) ? p.features : JSON.parse(p.features || '[]');
+          } catch (e) {
+            featuresList = [];
+          }
+
+          const formattedPrice = isTrial ? '₹0' : '₹' + Number(p.price).toLocaleString('en-IN');
+          const billingCadence = isTrial ? '/ 7 days free trial' : `/ ${p.billing_interval || 'month'} (billed monthly)`;
+
+          return `
+            <div class="pricing-card ${cardClass}">
+              <div class="pricing-badge ${badgeClass}">${badgeText}</div>
+
+              <div class="pricing-title-row">
+                <h3>${p.name}</h3>
+              </div>
+
+              <div class="pricing-desc-row">
+                <p>${p.description || ''}</p>
+              </div>
+
+              <div class="pricing-price-row">
+                <div class="pricing-price-amount" style="color: ${isGrowth ? '#2563eb' : '#0f172a'};">
+                  ${formattedPrice}
+                </div>
+                <div class="pricing-price-sub">${billingCadence}</div>
+              </div>
+
+              <div class="pricing-quota-box" style="background: ${quotaBg}; border: 1px solid ${quotaBorder};">
+                <div class="pricing-quota-label" style="color: ${quotaLabelColor};">${quotaLabel}</div>
+                <div class="pricing-quota-val" style="color: ${quotaValColor};">${quotaVal}</div>
+              </div>
+
+              <ul class="pricing-features-list">
+                ${featuresList.map(f => `
+                  <li class="pricing-feature-item">
+                    <span class="pricing-check-icon">✓</span>
+                    <span>${f}</span>
+                  </li>
+                `).join('')}
+              </ul>
+
+              <div class="pricing-action-box">
+                <button class="pricing-cta-btn ${ctaClass}" onclick="Landing.openSignupModal('${p.id}')">
+                  <span>${ctaText}</span>
+                </button>
+                <div class="pricing-subtext">${subtext}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      openSignupModal(planId = 'trial') {
+        const plan = this.state.plans.find(p => p.id === planId);
+        const isTrial = planId === 'trial' || (plan && plan.price === 0);
+        const planName = plan ? plan.name : (isTrial ? '7-Day Free Trial' : planId.toUpperCase());
+        const planPrice = plan ? (plan.price === 0 ? 'Free' : `₹${Number(plan.price).toLocaleString('en-IN')}`) : '';
+        const serverCount = plan ? plan.max_servers : (isTrial ? 1 : 5);
+
+        const content = `
+          <div class="modal-header" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff; padding: 18px 24px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.4rem;">🐝</span>
+              <div>
+                <h3 class="modal-title" style="color: #ffffff; font-size: 1.15rem; margin-bottom: 2px;">
+                  ${isTrial ? 'Start Your 7-Day Free Trial' : `Upgrade to ${planName}`}
+                </h3>
+                <div style="font-size: 0.76rem; color: #93c5fd;">BlastBee Chrome Extension &bull; Developed by Aparaitech Software</div>
+              </div>
+            </div>
+            <button class="modal-close" onclick="Landing.closeModal()" style="color: #ffffff; background: rgba(255,255,255,0.15);">&times;</button>
+          </div>
+
+          <div class="modal-body" style="padding: 24px; max-height: 82vh; overflow-y: auto;">
+            <div style="background: ${isTrial ? '#f0f9ff' : '#eff6ff'}; border: 1.5px solid ${isTrial ? '#bae6fd' : '#bfdbfe'}; border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; font-size: 0.82rem; color: #1e3a8a; line-height: 1.5;">
+              ${isTrial ? `
+                🎁 <strong>7-Day Free Trial Activated:</strong> Full platform access with <strong>1 dedicated SMTP server</strong> included. Zero upfront payment or credit card required!
+              ` : `
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+                  <span style="font-weight: 800; font-size: 0.92rem; color: #1e40af;">${planName}</span>
+                  <span style="font-weight: 900; font-size: 1.15rem; color: #2563eb;">${planPrice}<span style="font-size: 0.75rem; font-weight: 600; color: #64748b;">/mo</span></span>
+                </div>
+                <div>🖥️ <strong>Server Allocation:</strong> Unlocks <strong>${serverCount} Dedicated SMTP Servers</strong> with multi-server auto-rotation.</div>
+                <div style="font-size: 0.76rem; color: #475569; margin-top: 4px;">⚡ <em>Step 1: Create your professional account. Step 2: Instant UPI QR activation.</em></div>
+              `}
+            </div>
+
+            <form onsubmit="Landing.handleSignup(event, '${planId}')">
+              <!-- 1. Full Name -->
+              <div class="form-group" style="margin-bottom: 14px;">
+                <label class="form-label" style="font-weight: 700; font-size: 0.82rem; color: #1e293b; display: flex; align-items: center; gap: 6px; margin-bottom: 5px;">
+                  <span>👤 Full Name</span> <span style="color: #dc2626;">*</span>
+                </label>
+                <input type="text" id="regFullName" class="form-input" placeholder="e.g. Anand Kulkarni" required 
+                  style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;" />
+              </div>
+
+              <!-- 2. Email -->
+              <div class="form-group" style="margin-bottom: 14px;">
+                <label class="form-label" style="font-weight: 700; font-size: 0.82rem; color: #1e293b; display: flex; align-items: center; gap: 6px; margin-bottom: 5px;">
+                  <span>✉️ Work / College Email</span> <span style="color: #dc2626;">*</span>
+                </label>
+                <input type="email" id="regEmail" class="form-input" placeholder="e.g. name@company.com or hr@college.edu" required 
+                  style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;" />
+              </div>
+
+              <!-- 3. College / Organization Name -->
+              <div class="form-group" style="margin-bottom: 14px;">
+                <label class="form-label" style="font-weight: 700; font-size: 0.82rem; color: #1e293b; display: flex; align-items: center; gap: 6px; margin-bottom: 5px;">
+                  <span>🏢 College / Organization Name</span>
+                </label>
+                <input type="text" id="regCompany" class="form-input" placeholder="e.g. Infosys Ltd / COEP University" 
+                  style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;" />
+              </div>
+
+              <!-- 4. Phone Number (Optional) -->
+              <div class="form-group" style="margin-bottom: 14px;">
+                <label class="form-label" style="font-weight: 700; font-size: 0.82rem; color: #1e293b; display: flex; align-items: center; gap: 6px; margin-bottom: 5px;">
+                  <span>📱 Phone Number (Optional)</span>
+                </label>
+                <input type="tel" id="regPhone" class="form-input" placeholder="+91 9876543210" 
+                  style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;" />
+              </div>
+
+              <!-- 5 & 6. Password and Confirm Password -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 8px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label" style="font-weight: 700; font-size: 0.82rem; color: #1e293b; display: flex; align-items: center; gap: 6px; margin-bottom: 5px;">
+                    <span>🔒 Password (min 6 chars)</span> <span style="color: #dc2626;">*</span>
+                  </label>
+                  <input type="password" id="regPassword" class="form-input" placeholder="••••••••" minlength="6" required 
+                    oninput="Landing.checkPasswordMatch()"
+                    style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;" />
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label" style="font-weight: 700; font-size: 0.82rem; color: #1e293b; display: flex; align-items: center; gap: 6px; margin-bottom: 5px;">
+                    <span>🛡️ Confirm Password</span> <span style="color: #dc2626;">*</span>
+                  </label>
+                  <input type="password" id="regConfirmPassword" class="form-input" placeholder="••••••••" minlength="6" required 
+                    oninput="Landing.checkPasswordMatch()"
+                    style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;" />
+                </div>
+              </div>
+
+              <div id="passwordMatchHint" style="font-size: 0.76rem; font-weight: 600; margin-bottom: 16px; display: none;"></div>
+
+              <button type="submit" class="btn btn-primary" id="btnSubmitSignup" style="width: 100%; justify-content: center; padding: 12px; font-weight: 800; font-size: 0.95rem; border-radius: 8px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);">
+                <span>${isTrial ? '🚀 Create Account &amp; Start 7-Day Free Trial &rarr;' : `⚡ Create Account &amp; Proceed to UPI Payment (${planPrice}) &rarr;`}</span>
+              </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 16px; font-size: 0.82rem; color: var(--text-muted);">
+              Already have an account? <a href="javascript:void(0)" onclick="Landing.openLoginModal()" style="color: #2563eb; font-weight: 700;">Sign in to Workspace</a>
+            </div>
+          </div>
+        `;
+        this.openModal(content);
+      },
+
+      checkPasswordMatch() {
+        const p1 = document.getElementById('regPassword');
+        const p2 = document.getElementById('regConfirmPassword');
+        const hint = document.getElementById('passwordMatchHint');
+        if (!p1 || !p2 || !hint) return;
+        if (!p2.value) {
+          hint.style.display = 'none';
+          p2.style.borderColor = '#cbd5e1';
+          return;
+        }
+        hint.style.display = 'block';
+        if (p1.value === p2.value) {
+          hint.style.color = '#16a34a';
+          hint.innerHTML = '✓ Passwords match perfectly';
+          p2.style.borderColor = '#16a34a';
+        } else {
+          hint.style.color = '#dc2626';
+          hint.innerHTML = '✗ Passwords do not match';
+          p2.style.borderColor = '#dc2626';
+        }
+      },
+
+      async handleSignup(e, planId = 'trial') {
+        e.preventDefault();
+        const btn = document.getElementById('btnSubmitSignup');
+        const fullName = document.getElementById('regFullName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
+        const company = document.getElementById('regCompany').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+
+        if (password.length < 6) {
+          this.showToast('Password must be at least 6 characters long.', 'warning');
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          this.showToast('Passwords do not match. Please ensure both password fields match.', 'error');
+          const p2 = document.getElementById('regConfirmPassword');
+          if (p2) p2.focus();
+          return;
+        }
+
+        if (btn) btn.disabled = true;
+
+        try {
+          const res = await api.request('/auth/register', {
+            method: 'POST',
+            body: { fullName, email, password, confirmPassword, company, phone }
+          });
+
+          if (res.token) {
+            localStorage.setItem('aparaitech_auth_token', res.token);
+            if (planId && planId !== 'trial') {
+              localStorage.setItem('selected_upgrade_plan', planId);
+            }
+            this.showToast('Welcome to BlastBee! Your workspace is ready.', 'success');
+            setTimeout(() => {
+              window.location.href = res.redirectUrl || '/app';
+            }, 800);
+          }
+        } catch (err) {
+          this.showToast(err.message || 'Registration failed', 'error');
+          if (btn) btn.disabled = false;
+        }
+      },
+
+      openLaptopModal() {
+        const content = `
+          <div class="modal-header" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff; padding: 20px 24px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="background: rgba(56, 189, 248, 0.2); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid rgba(56, 189, 248, 0.4);">
+                💻
+              </div>
+              <div>
+                <h3 class="modal-title" style="color: #ffffff; font-size: 1.2rem; margin-bottom: 3px;">BlastBee Laptop Desktop Application</h3>
+                <div style="font-size: 0.78rem; color: #93c5fd;">High-Speed Outreach Engine &bull; Windows 10 &amp; 11 (64-bit)</div>
+              </div>
+            </div>
+            <button class="modal-close" onclick="Landing.closeModal()" style="color: #ffffff; background: rgba(255,255,255,0.15);">&times;</button>
+          </div>
+          <div class="modal-body" style="padding: 24px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px;">
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center;">
+                <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748b; font-weight: 700;">Platform</div>
+                <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-top: 2px;">Windows 10 / 11</div>
+              </div>
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center;">
+                <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748b; font-weight: 700;">Version</div>
+                <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-top: 2px;">v2.4.0 (Latest)</div>
+              </div>
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center;">
+                <div style="font-size: 0.72rem; text-transform: uppercase; color: #64748b; font-weight: 700;">Package</div>
+                <div style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-top: 2px;">Standalone App</div>
+              </div>
+            </div>
+
+            <div style="background: #f0f9ff; border: 1.5px solid #bae6fd; border-radius: 10px; padding: 16px; margin-bottom: 20px;">
+              <h4 style="font-size: 0.9rem; font-weight: 800; color: #0369a1; margin-bottom: 8px;">✨ Why Run BlastBee on Your Laptop?</h4>
+              <ul style="margin: 0; padding-left: 20px; font-size: 0.84rem; color: #0c4a6e; line-height: 1.6;">
+                <li><strong>Dedicated Standalone Window:</strong> Clean frameless app window without browser URL bar.</li>
+                <li><strong>Local Multi-SMTP Engine:</strong> Ultra-fast local email queue processing with zero network latency.</li>
+                <li><strong>Instant Desktop Shortcut:</strong> Creates a ready-to-use desktop icon directly on your PC.</li>
+                <li><strong>Spreadsheet Engine:</strong> Drag and drop large CSV or Excel files with local validation.</li>
+              </ul>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+              <a href="/api/download/app" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-weight: 800; font-size: 1rem; border-radius: 8px; box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4); text-decoration: none;">
+                <span>💻</span>
+                <span>Download BlastBee App for Laptop</span>
+              </a>
+              <div style="font-size: 0.74rem; color: #64748b; text-align: center;">
+                Direct Windows Application &bull; 13.3 MB &bull; Instant 1-Click Launch
+              </div>
+            </div>
+          </div>
+        `;
+        this.openModal(content, '540px');
+      },
+
+      openLoginModal() {
+        const content = `
+          <div class="modal-header" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff; padding: 18px 24px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.4rem;">🔐</span>
+              <div>
+                <h3 class="modal-title" style="color: #ffffff; font-size: 1.15rem; margin-bottom: 2px;">Sign In to Your Workspace</h3>
+                <div style="font-size: 0.76rem; color: #93c5fd;">BlastBee &bull; Developed by Aparaitech Software</div>
+              </div>
+            </div>
+            <button class="modal-close" onclick="Landing.closeModal()" style="color: #ffffff; background: rgba(255,255,255,0.15);">&times;</button>
+          </div>
+          <div class="modal-body" style="padding: 24px;">
+            <form onsubmit="Landing.handleLogin(event)">
+              <div class="form-group" style="margin-bottom: 16px;">
+                <label class="form-label" style="font-weight: 700; font-size: 0.82rem; color: #1e293b; margin-bottom: 5px;">Work / College Email or Username</label>
+                <input type="text" id="loginEmail" class="form-input" placeholder="name@company.com or name@college.edu" required 
+                  style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;" />
+              </div>
+
+              <div class="form-group" style="margin-bottom: 22px;">
+                <label class="form-label" style="font-weight: 700; font-size: 0.82rem; color: #1e293b; margin-bottom: 5px;">Password</label>
+                <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required 
+                  style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;" />
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="btnSubmitLogin" style="width: 100%; justify-content: center; padding: 12px; font-weight: 800; font-size: 0.95rem; border-radius: 8px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);">
+                <span>Sign In to BlastBee &rarr;</span>
+              </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 18px; font-size: 0.82rem; color: var(--text-muted);">
+              New here? <a href="javascript:void(0)" onclick="Landing.openSignupModal()" style="color: #2563eb; font-weight: 700;">Start 7-Day Free Trial (₹0)</a>
+            </div>
+          </div>
+        `;
+        this.openModal(content);
+      },
+
+      async handleLogin(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnSubmitLogin');
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+
+        if (btn) btn.disabled = true;
+
+        try {
+          const res = await api.login({ email, password });
+          if (res.token) {
+            localStorage.setItem('aparaitech_auth_token', res.token);
+            this.showToast(res.message || 'Login successful!', 'success');
+            setTimeout(() => {
+              window.location.href = res.redirectUrl || '/app';
+            }, 600);
+          }
+        } catch (err) {
+          this.showToast(err.message || 'Login failed', 'error');
+          if (btn) btn.disabled = false;
+        }
+      },
+
+      openModal(html, maxWidth = null) {
+        const overlay = document.getElementById('modalContainer');
+        const card = document.getElementById('modalCard');
+        if (overlay && card) {
+          card.innerHTML = html;
+          card.style.maxWidth = maxWidth || '';
+          overlay.style.display = 'flex';
+        }
+      },
+
+      closeModal() {
+        const overlay = document.getElementById('modalContainer');
+        const card = document.getElementById('modalCard');
+        if (card) card.style.maxWidth = '';
+        if (overlay) overlay.style.display = 'none';
+      },
+
+      showToast(msg, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `<div class="toast-content"><div class="toast-msg">${msg}</div></div>`;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      Landing.init();
+    });
+  </script>
+</body>
+</html>

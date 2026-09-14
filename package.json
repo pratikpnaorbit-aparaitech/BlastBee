@@ -1,0 +1,31 @@
+{
+  "name": "aparaitech-student-mail-blast",
+  "version": "1.0.0",
+  "description": "Student Email Blast Web Application for Aparaitech Software Recruitment Team",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node database/seed.js",
+    "test": "node test/test_suite.js"
+  },
+  "keywords": [
+    "email-blast",
+    "campus-recruitment",
+    "placement-drive",
+    "aparaitech",
+    "mailer"
+  ],
+  "author": "Aparaitech Software Recruitment Engineering",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.21.2",
+    "mongodb": "^7.5.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.16",
+    "xlsx": "^0.18.5"
+  }
+}

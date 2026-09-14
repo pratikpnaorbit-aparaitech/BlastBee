@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BlastBee Cockpit</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { width: 360px; background: #0f172a; color: #ffffff; padding: 16px; font-size: 13px; }
+    .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 14px; }
+    .brand { display: flex; align-items: center; gap: 8px; }
+    .brand-icon { width: 30px; height: 30px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .brand-title { font-weight: 800; font-size: 15px; letter-spacing: -0.3px; }
+    .brand-title span { color: #fbbf24; }
+    .badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: #2563eb; color: #fff; }
+    .status-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+    .status-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .status-row:last-child { margin-bottom: 0; }
+    .status-label { color: #94a3b8; font-size: 11px; }
+    .status-val { font-weight: 700; color: #34d399; font-size: 12px; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-decoration: none; cursor: pointer; border: none; transition: 0.15s; }
+    .btn-primary { background: #2563eb; color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.15); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+    .footer { text-align: center; font-size: 10px; color: #64748b; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px; }
+    .footer a { color: #93c5fd; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <div class="brand-icon">🐝</div>
+      <div class="brand-title">Blast<span>Bee</span></div>
+    </div>
+    <span class="badge">v2.4 Extension</span>
+  </div>
+
+  <div class="status-card">
+    <div class="status-row">
+      <span class="status-label">Outreach Engine</span>
+      <span class="status-val" id="engineStatus">● Connected (Online)</span>
+    </div>
+    <div class="status-row">
+      <span class="status-label">Multi-SMTP Fleet</span>
+      <span class="status-val" style="color: #60a5fa;" id="fleetStatus">Active Auto-Rotation</span>
+    </div>
+    <div class="status-row">
+      <span class="status-label">Primary Deliverability</span>
+      <span class="status-val" style="color: #fde68a;">99.8% Inbox Shield</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <a href="http://localhost:3000/app#composer" target="_blank" class="btn btn-primary">
+      <span>✉️ New Blast</span>
+    </a>
+    <a href="http://localhost:3000/app#blast-monitor" target="_blank" class="btn btn-secondary">
+      <span>⚡ Live Cockpit</span>
+    </a>
+    <a href="http://localhost:3000/app#students" target="_blank" class="btn btn-secondary">
+      <span>👥 Contacts</span>
+    </a>
+    <a href="http://localhost:3000/app#subscription" target="_blank" class="btn btn-secondary">
+      <span>💎 Subscription</span>
+    </a>
+  </div>
+
+  <div class="footer">
+    Developed by <strong>Aparaitech Software</strong> &bull; <a href="http://localhost:3000/app" target="_blank">Open App</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
